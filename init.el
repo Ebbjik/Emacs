@@ -39,10 +39,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(## company emmet-mode flycheck lsp-treemacs lsp-ui magit prettier-js
+	web-mode yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; ==================== 加载模块化配置 ====================
+;; 将 lisp 目录添加到加载路径
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+;; ==================== Vue 3 开发配置 ====================
+(require 'init-vue nil t)
