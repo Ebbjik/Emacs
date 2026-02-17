@@ -1,7 +1,7 @@
 ;;; init-c.el --- Simple C/C++ Development Configuration -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; 简单的 C/C++ 开发环境配置，使用 Clang 作为补全后端
+;; 简单的 C/C++ 开发环境配置，使用 Clang 作为补全后端，集成 clang-format 自动格式化
 
 ;;; Code:
 
@@ -10,7 +10,7 @@
 ;; ==================== 基础编辑设置 ====================
 (defun my-c-mode-hook ()
   "C模式钩子函数，设置缩进和编码风格"
-  (setq c-basic-offset 4)        ;; 基础缩进为4个空格
+  (setq c-basic-offset 2)        ;; 基础缩进为2个空格
   (setq tab-width 4)              ;; Tab键宽度为4
   (setq indent-tabs-mode nil)     ;; 缩进使用空格代替Tab字符
   (c-set-offset 'substatement-open 0)) ;; 控制语句后的大括号缩进
@@ -35,6 +35,53 @@
 ;; 使用内置的 company-clang 后端
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-clang))
+
+;; ==================== Clang-Format 配置 ====================
+(use-package clang-format
+  :ensure t
+  ;; 为 C/C++ 模式启用保存时自动格式化
+  :hook ((c-mode c++-mode) . clang-format-on-save-mode)
+  :config
+  ;; 设置代码风格 - 优先使用项目中的 .clang-format 文件
+  (setq clang-format-style "file")
+  ;; 如果没有找到 .clang-format 文件，使用 Google 风格作为备选
+  (setq clang-format-fallback-style "Google")
+  
+  ;; 检查 clang-format 是否可用
+  (unless (executable-find "clang-format")
+    (message "⚠️ Warning: clang-format not found. Please install it with: sudo apt install clang-format"))
+  
+  ;; 格式化整个文件函数（带光标位置恢复）
+  (defun my-clang-format-buffer ()
+    "使用clang-format格式化整个缓冲区"
+    (interactive)
+    (if (executable-find "clang-format")
+        (progn
+          ;; 保存当前光标位置
+          (let ((line (line-number-at-pos))
+                (col (current-column)))
+            ;; 执行格式化
+            (clang-format-buffer)
+            ;; 恢复光标位置
+            (goto-char (point-min))
+            (forward-line (1- line))
+            (forward-char (min col (line-end-position)))
+            (message "✅ Buffer formatted with clang-format")))
+      (message "❌ clang-format not found")))
+  
+  ;; 检查 clang-format 状态函数
+  (defun my-check-clang-format ()
+    "检查clang-format是否可用"
+    (interactive)
+    (if (executable-find "clang-format")
+        (progn
+          (message "✅ clang-format found at %s" (executable-find "clang-format"))
+          (if clang-format-on-save-mode
+              (message "✅ clang-format-on-save-mode is ACTIVE")
+            (message "❌ clang-format-on-save-mode is INACTIVE")))
+      (message "❌ clang-format not found. Install with: sudo apt install clang-format")))
+  
+  (message "Clang-format configured with save-on-format"))
 
 ;; ==================== Flycheck 语法检查 ====================
 (use-package flycheck
@@ -68,9 +115,17 @@
 ;; ==================== 自定义快捷键 ====================
 (defun my-c-mode-key-bindings ()
   "C/C++模式下的自定义快捷键"
+  ;; 编译相关
   (local-set-key (kbd "C-c C-c") 'my-compile-function)  ;; 编译
   (local-set-key (kbd "C-c C-k") 'kill-compilation)     ;; 终止编译
-  (local-set-key (kbd "C-c C-r") 'recompile))           ;; 重新编译
+  (local-set-key (kbd "C-c C-r") 'recompile)            ;; 重新编译
+  
+  ;; 格式化相关
+  (local-set-key (kbd "C-c C-f") 'my-clang-format-buffer)   ;; 格式化整个文件
+  
+  ;; 检查 clang-format 状态
+  (local-set-key (kbd "C-c C-h") 'my-check-clang-format)    ;; 检查格式化状态
+)
 
 (add-hook 'c-mode-common-hook 'my-c-mode-key-bindings)
 
@@ -86,8 +141,15 @@
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'c++-mode-hook 'my-c-mode-hook)
 
+;; ==================== 启动后检查 ====================
+;; 在 Emacs 启动后检查 clang-format 状态
+(run-with-idle-timer 2 nil
+  (lambda ()
+    (unless (executable-find "clang-format")
+      (message "⚠️ 提示: clang-format 未安装。自动格式化功能不可用。安装命令: sudo apt install clang-format"))))
+
 ;; ==================== 初始化提示 ====================
-(message "✅ Simple C/C++ configuration loaded (Clang backend)")
+(message "✅ Simple C/C++ configuration loaded (Clang backend + Clang-format auto-format on save)")
 
 (provide 'init-c)
 ;;; init-c.el ends here
