@@ -15,6 +15,7 @@
 
 (require 'use-package)
 
+;; 从zshrc获取环境变量
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -22,6 +23,12 @@
   (exec-path-from-shell-copy-env "WAKATIME_API_KEY"))
 ;; 字体设置
 (set-frame-font "SauceCodePro Nerd Font Mono 15" nil t)
+;; 禁用工具栏
+(tool-bar-mode -1)
+;; 禁用滚动条
+(scroll-bar-mode -1)
+;; 去掉菜单栏
+(menu-bar-mode -1)
 
 ;; 启动waka
 (use-package wakatime-mode
