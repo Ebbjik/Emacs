@@ -29,6 +29,9 @@
 (scroll-bar-mode -1)
 ;; 去掉菜单栏
 (menu-bar-mode -1)
+;; 使用相对行号
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode t)
 
 ;; 启动waka
 (use-package wakatime-mode
@@ -36,10 +39,6 @@
   :config
   (setq wakatime-api-key (getenv "WAKATIME_API_KEY"))
   (global-wakatime-mode 1))
-
-;; 使用相对行号
-(setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode t)
 
 ;; treemacs 配置
 (use-package treemacs
@@ -50,9 +49,20 @@
   :bind
   ("M-0" . treemacs))
 
+;; git工具
 (use-package magit
   :ensure t)
 
+;; 添加格式化
+(use-package apheleia
+  :ensure t
+  :config
+  (apheleia-global-mode +1)
+  ;; 直接修改 'prettier-javascript 这个 formatter 的条目
+  (setf (alist-get 'prettier-javascript apheleia-formatters)
+        '("apheleia-npx" "prettier" "--stdin-filepath" filepath)))
+
+;; 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -60,9 +70,9 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi-deuteranopia))
  '(package-selected-packages
-   '(clang-format company emmet-mode exec-path-from-shell flycheck
-		  lsp-treemacs lsp-ui magit prettier-js
-		  rainbow-delimiters wakatime-mode web-mode yasnippet)))
+   '(apheleia clang-format company emmet-mode exec-path-from-shell
+	      flycheck lsp-treemacs lsp-ui magit prettier-js
+	      rainbow-delimiters wakatime-mode web-mode yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
