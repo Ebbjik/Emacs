@@ -16,13 +16,19 @@
 (require 'use-package)
 
 ;; 从zshrc获取环境变量
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "WAKATIME_API_KEY"))
+;;(use-package exec-path-from-shell
+;;  :ensure t
+;;  :config
+;;  (exec-path-from-shell-initialize)
+;;  (exec-path-from-shell-copy-env "WAKATIME_API_KEY"))
+
 ;; 字体设置
-(set-frame-font "SauceCodePro Nerd Font Mono 15" nil t)
+(set-frame-font "JetBrainsMono NF-12" nil t) 
+(set-fontset-font t 'han (font-spec :family "Sarasa Mono SC" :size 18))
+(set-fontset-font t 'cjk-misc (font-spec :family "Sarasa Mono SC" :size 18))
+;; (set-fontset-font t 'han (font-spec :family "Microsoft Yahei UI" :size 19))
+;; (set-fontset-font t 'cjk-misc (font-spec :family "Microsoft Yahei UI" :size 19))
+
 ;; 禁用工具栏
 (tool-bar-mode -1)
 ;; 禁用滚动条
@@ -37,13 +43,18 @@
 (use-package wakatime-mode
   :ensure t
   :config
+  ;; 使用绝对路径
+  (setq wakatime-cli-path "C:/Users/27722/emacs-home/wakatime/wakatime-cli-windows-amd64.exe")
+  ;; 设置 API Key
   (setq wakatime-api-key (getenv "WAKATIME_API_KEY"))
+  ;; 关闭错误提示（避免烦人的消息）
+  (setq wakatime-show-errors nil)
   (global-wakatime-mode 1))
 
 ;; treemacs 配置
 (use-package treemacs
   :ensure t
-  :config				
+  :config
   (treemacs-follow-mode t)
   (treemacs-filewatch-mode t)
   :bind
@@ -69,16 +80,14 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-vivendi-deuteranopia))
- '(package-selected-packages
-   '(apheleia clang-format company emmet-mode exec-path-from-shell
-	      flycheck lsp-treemacs lsp-ui magit prettier-js
-	      rainbow-delimiters wakatime-mode web-mode yasnippet)))
+ '(package-selected-packages nil)
+ '(wakatime-cli-path "\11\11"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "JetBrainsMono NF" :foundry "outline" :slant normal :weight bold :height 120 :width normal)))))
 
 ;; ==================== 加载模块化配置 ====================
 ;; 将 lisp 目录添加到加载路径
