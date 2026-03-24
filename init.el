@@ -38,17 +38,17 @@
 ;; 使用相对行号
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
+;; 加载暗黑主题
+(load-theme 'modus-vivendi-deuteranopia t)
 
 ;; 启动waka
 (use-package wakatime-mode
   :ensure t
   :config
-  ;; 使用绝对路径
-  (setq wakatime-cli-path "C:/Users/27722/emacs-home/wakatime/wakatime-cli-windows-amd64.exe")
-  ;; 设置 API Key
+  ;; 展开 ~ 为完整路径
+  (setq wakatime-cli-path (expand-file-name "~/wakatime/wakatime-cli-windows-amd64.exe"))
+  ;; 从环境变量获取 API Key
   (setq wakatime-api-key (getenv "WAKATIME_API_KEY"))
-  ;; 关闭错误提示（避免烦人的消息）
-  (setq wakatime-show-errors nil)
   (global-wakatime-mode 1))
 
 ;; treemacs 配置
@@ -72,22 +72,6 @@
   ;; 直接修改 'prettier-javascript 这个 formatter 的条目
   (setf (alist-get 'prettier-javascript apheleia-formatters)
         '("apheleia-npx" "prettier" "--stdin-filepath" filepath)))
-
-;; 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(modus-vivendi-deuteranopia))
- '(package-selected-packages nil)
- '(wakatime-cli-path "\11\11"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "JetBrainsMono NF" :foundry "outline" :slant normal :weight bold :height 120 :width normal)))))
 
 ;; ==================== 加载模块化配置 ====================
 ;; 将 lisp 目录添加到加载路径
