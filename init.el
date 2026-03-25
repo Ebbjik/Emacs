@@ -1,3 +1,9 @@
+;;; init.el --- My personal Emacs configuration  -*- lexical-binding: t -*-
+;;; Commentary:
+;; This is the main configuration file for GNU Emacs.
+;; It sets up packages, themes, fonts, and language-specific modes.
+;;; Code:
+
 ;; 关闭启动欢迎页面
 (setq inhibit-startup-screen t)
 ;; 关闭编译警告（可选）
@@ -24,7 +30,7 @@
 ;; 设置英文字体
 (set-frame-font "SauceCodePro Nerd Font Mono 15" nil t)
 ;; 设置中文字体（使用Noto Sans Mono CJK SC）
-(set-fontset-font t 'han (font-spec :family "Noto Sans Mono CJK SC" :size 18))
+(set-fontset-font t 'han (font-spec :family "Noto Sans Mono CJK SC"))
 ;; 禁用工具栏
 (tool-bar-mode -1)
 ;; 禁用滚动条
@@ -32,8 +38,8 @@
 ;; 去掉菜单栏
 (menu-bar-mode -1)
 ;; 使用相对行号
-(setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
+(setq display-line-numbers-type 'relative)
 
 ;; 启动waka
 (use-package wakatime-mode
@@ -45,7 +51,7 @@
 ;; treemacs 配置
 (use-package treemacs
   :ensure t
-  :config				
+  :config
   (treemacs-follow-mode t)
   (treemacs-filewatch-mode t)
   :bind
@@ -95,3 +101,6 @@
 
 ;; ==================== JavaScript/TypeScript 开发配置 ====================
 (require 'init-js nil t)   ;; 新增这一行
+
+(provide 'init)
+;;; init.el ends here
