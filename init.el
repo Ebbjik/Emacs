@@ -21,8 +21,10 @@
   :config
   (exec-path-from-shell-initialize)
   (exec-path-from-shell-copy-env "WAKATIME_API_KEY"))
-;; 字体设置
+;; 设置英文字体
 (set-frame-font "SauceCodePro Nerd Font Mono 15" nil t)
+;; 设置中文字体（使用Noto Sans Mono CJK SC）
+(set-fontset-font t 'han (font-spec :family "Noto Sans Mono CJK SC" :size 18))
 ;; 禁用工具栏
 (tool-bar-mode -1)
 ;; 禁用滚动条

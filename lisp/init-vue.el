@@ -1,11 +1,5 @@
 ;;; init-vue.el --- Vue 3 development configuration
 
-(let ((node-path "/home/prawn/.nvm/versions/node/v24.13.1/bin"))
-  (when (file-directory-p node-path)
-    (add-to-list 'exec-path node-path)
-    (setenv "PATH" (concat node-path ":" (getenv "PATH")))
-    (message "Added path: %s" node-path)))
-
 ;; 1. 基础编辑：web-mode 处理 .vue 文件
 (use-package web-mode
   :ensure t
